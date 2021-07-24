@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html style="overflow:auto">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="theme-color" content="#000044">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        <title>Simulations - Sleep Diary Info</title>
+    </head>
+    <body style="background:black">
+        <noscript><strong>Please enable JavaScript to view the site, or go to <a href="https://github.com/sleepdiary">our GitHub page</a>.</strong></noscript>
+        <div id="app">
+            <v-app>
+                <v-main>
+                    <div style="height:100%;max-width:600px;margin:auto">
+                        <v-app-bar>
+                            <v-btn style="width:25%" @click="open_dialog=true">
+                                <v-icon>mdi-open-in-app</v-icon>
+                                <span>Open</span>
+                            </v-btn>
+                            <v-btn style="width:25%" @click="undo" :disabled="undo_disabled">
+                                <v-icon>mdi-undo</v-icon>
+                                <span>Undo</span>
+                            </v-btn>
+                            <v-btn style="width:25%" @click="redo" :disabled="redo_disabled">
+                                <v-icon>mdi-redo</v-icon>
+                                <span>Redo</span>
+                            </v-btn>
+                            <v-btn style="width:25%" @click="run">
+                                <v-icon>mdi-play</v-icon>
+                                <span>Run</span>
+                            </v-btn>
+
+                        </v-app-bar>
+
+                        <v-dialog
+                            v-model="open_dialog"
+                            scrollable
+                            width="400"
+                        >
+                            <v-list>
+                                <v-list-item
+                                    v-for="example in examples"
+                                    :key="example.title"
+                                    @click="load(example)"
+                                >
+                                    <v-list-item-content>
+                                        <v-list-item-title>{{example.title}}</v-list-item-title>
+                                        <v-list-item-subtitle>{{example.subtitle}}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-btn style="width:100%" @click="open_dialog=false">
+                                        <v-icon>mdi-close</v-icon>
+                                        <span>Close</span>
+                                    </v-btn>
+                                </v-list-item>
+                            </v-list>
+                        </v-dialog>
+
+                        <v-dialog
+                            v-model="error_dialog"
+                            width="400"
+                        >
+                            <v-card>
+                                <v-card-title class="text-h5">
+                                    {{error.name}}
+                                </v-card-title>
+
+                                <v-card-text>{{error.message}}</v-card-text>
+
+                                <v-card-actions>
+                                    <v-btn
+                                        color="primary"
+                                        width="100%"
+                                        text
+                                        @click="error_dialog = false"
+                                    >
+                                        <v-icon>mdi-close</v-icon>
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+
+                        <div ref="editor" style="min-height:20em;height:calc( 100% - 128px )" v-text="source"></div>
+
+                        <v-app-bar>
+                            <v-btn style="width:33%" href="https://github.com/sleepdiary/info/">
+                                <v-icon>mdi-github</v-icon>
+                                <span>Source code</span>
+                            </v-btn>
+                            <v-btn style="width:33%" href="https://github.com/sleepdiary/info/LICENSE">
+                                <v-icon>mdi-license</v-icon>
+                                <span>License</span>
+                            </v-btn>
+                            <v-btn style="width:33%" href="https://github.com/sleepdiary/info/issues/new">
+                                <v-icon>mdi-message</v-icon>
+                                <span>Contact us</span>
+                            </v-btn>
+
+                        </v-app-bar>
+                        
+                    </div>
+                </v-main>
+            </v-app>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
+        <script src="https://pagecdn.io/lib/ace/1.4.12/ace.min.js" crossorigin="anonymous" integrity="sha256-T5QdmsCQO5z8tBAXMrCZ4f3RX8wVdiA0Fu17FGnU1vU=" ></script>
+        <script src="../library/sleepdiary-library.min.js"></script>
+        <script>
+
+         const diary_loader = new window.DiaryLoader(
+             diary => {
+                 location = '/dashboard/#?'+diary.to("Standard").to("url");
+             }
+         );
+
+         new Vue({
+             el: '#app',
+             vuetify: new Vuetify({
+                 theme: { dark: true },
+             }),
+             data: () => ({
+                 editor: 0,
+                 error: '',
+                 error_dialog: false,
+                 open_dialog: false,
+                 examples: [
+                     {
+                         title: "Midnight-8am",
+                         subtitle: "Someone who sleeps naturally between midnight and 8am",
+                         source: `/*
+ * Write a program that simulates a sleep diary,
+ * then view that diary in the dashboard.
+*/
+
+// set the date and time when our simulation begins:
+start_at("2010-01-01T18:00:00Z");
+
+// add a year's worth of diary entries:
+for ( n = 0; n < 365; n++ ) {
+    add_diary_entry({
+      asleep_at: n*days +  6*hours + normal_distribution()*hours,
+      awake_at:  n*days + 14*hours + normal_distribution()*hours,
+    });
+}`,
+                     },
+                     {
+                         title: "4am-Noon",
+                         subtitle: "Someone who sleeps naturally between 4am and noon",
+                         source: `/*
+ * Write a program that simulates a sleep diary,
+ * then view that diary in the dashboard.
+*/
+
+// set the date and time when our simulation begins:
+start_at("2010-01-01T18:00:00Z");
+
+// add a year's worth of diary entries:
+for ( n = 0; n < 365; n++ ) {
+    add_diary_entry({
+      asleep_at: n*days + 10*hours + normal_distribution()*hours,
+      awake_at:  n*days + 18*hours + normal_distribution()*hours,
+    });
+}`,
+                     },
+                     {
+                         title: "Non-24",
+                         subtitle: "Someone with a 25-hour day",
+                         source: `/*
+ * Write a program that simulates a sleep diary,
+ * then view that diary in the dashboard.
+*/
+
+// set the date and time when our simulation begins:
+start_at("2010-01-01T18:00:00Z");
+
+// add a year's worth of diary entries:
+for ( n = 0; n < 365; n++ ) {
+    add_diary_entry({
+      asleep_at: n*days + n*hours +  6*hours + normal_distribution()*hours,
+      awake_at:  n*days + n*hours + 14*hours + normal_distribution()*hours,
+    });
+}`,
+                     },
+                     {
+                         title: "Weekday Alarm",
+                         subtitle: "Someone with an alarm that goes off at 6am",
+                         source: `/*
+ * Write a program that simulates a sleep diary,
+ * then view that diary in the dashboard.
+*/
+
+// set the date and time when our simulation begins:
+start_at("2010-01-01T18:00:00Z");
+
+// add a year's worth of diary entries:
+for ( n = 0; n < 365; n++ ) {
+
+    if ( day_of_week(n) == "Saturday" || day_of_week(n) == "Sunday" ) {
+
+        asleep_at = n*days +  6*hours + normal_distribution()*hours;
+        awake_at  = n*days + 14*hours + normal_distribution()*hours;
+
+    } else { // Monday to Friday
+
+        asleep_at = n*days +  4*hours + normal_distribution()*hours;
+
+        add_diary_entry({
+          asleep_at: n*days + 12*hours,
+          awake_at:  n*days + 12*hours,
+          status: "alarm",
+        });
+
+        awake_at  = n*days + 12*hours + normal_distribution()*30*seconds;
+
+        // simulate pressing the snooze button:
+        while ( Math.random() < 0.5 ) awake_at += 5*minutes;
+
+    }
+
+    add_diary_entry({
+      asleep_at: asleep_at,
+      awake_at:  awake_at,
+    });
+
+}`,
+                     },
+                     {
+                         title: "Features",
+                         subtitle: "Various supported features, including a DST change",
+                         source: `/*
+ * Write a program that simulates a sleep diary,
+ * then view that diary in the dashboard.
+*/
+
+// set the date and time when our simulation begins:
+start_at("2020-03-25T18:00:00Z");
+
+// set the timezone:
+set_timezone("Europe/London");
+
+// add some diary entries:
+[
+   'alarm',
+   'snack', 'meal',
+   'alcohol', 'caffeine', 'sleep aid', 'chocolate',
+   'toilet', 'noise',
+   'exercise',
+].forEach( (status,n) => {
+
+    // if there are multiple "lights off"s, only the last one is used:
+    add_diary_entry({
+      asleep_at: n*days +  0*hours,
+      awake_at:  n*days +  0*hours,
+      status: "lights off",
+    });
+    add_diary_entry({
+      asleep_at: n*days +  6*hours,
+      awake_at:  n*days +  6*hours,
+      status: "lights off",
+    });
+
+    add_diary_entry({
+      asleep_at: n*days +  6.5*hours,
+      awake_at:  n*days +  6.5*hours,
+      status: "in bed",
+    });
+    add_diary_entry({
+      asleep_at: n*days +  7*hours,
+      awake_at:  n*days +  15*hours,
+      status: "asleep",
+    });
+    add_diary_entry({
+      asleep_at: n*days +  15.5*hours,
+      awake_at:  n*days +  15.5*hours,
+      status: "out of bed",
+    });
+
+    add_diary_entry({
+      asleep_at: n*days +  20*hours,
+      awake_at:  n*days +  20*hours,
+      status: status,
+    });
+
+});`,
+                     },
+                 ],
+
+                 source: `/*
+ * Write a program that simulates a sleep diary,
+ * then view that diary in the dashboard.
+*/
+
+// set the date and time when our simulation begins:
+start_at("2010-01-01T18:00:00Z");
+
+// uncomment the following line to set a timezone:
+//set_timezone("Europe/London");
+
+// add a diary entry indicating the user slept between
+// exactly 6 and 14 hours after the diary began:
+add_diary_entry({
+  asleep_at: 0*days +  6*hours,
+  awake_at:  0*days + 14*hours,
+});
+
+// add a diary entry indicating the user slept between
+// approximately 6 and 14 hours after the diary began:
+add_diary_entry({
+  asleep_at: 1*days +  6*hours + normal_distribution()*hours,
+  awake_at:  1*days + 14*hours + normal_distribution()*hours,
+});
+
+// edit this code, or click "Open" to see some more examples`,
+
+                 undo_disabled: true,
+                 redo_disabled: true,
+             }),
+
+             mounted() {
+
+                 const editor = this.editor = window.ace.edit(this.$refs.editor);
+                 window.ace.config.set('basePath', 'https://pagecdn.io/lib/ace/1.4.12')
+                 editor.setTheme("ace/theme/monokai");
+                 editor.session.setMode("ace/mode/javascript");
+                 editor.on("input", () => {
+                     this.undo_disabled = !editor.session.getUndoManager().hasUndo();
+                     this.redo_disabled = !editor.session.getUndoManager().hasRedo();
+                 });
+
+             },
+
+             methods: {
+                 load(example) {
+                     this.editor.setValue(example.source);
+                     this.open_dialog = false;
+                 },
+                 run() {
+                     setTimeout( () => {
+                         var start = "2010-01-01T18:00:00Z",
+                             source = { timezone: "Etc/GMT" },
+                             diary = [
+                                 "SleepStart,SleepEnd,status"
+                             ]
+                         ;
+
+                         try {
+                             new Function(
+                                 // functions:
+                                 "normal_distribution",
+                                 "start_at",
+                                 "add_diary_entry",
+                                 "day_of_week",
+                                 "set_timezone",
+                                 // constants:
+                                 "seconds",
+                                 "minutes",
+                                 "hours",
+                                 "days",
+                                 // pre-declared "var"s:
+                                 "asleep_at",
+                                 "awake_at",
+                                 "n",
+                                 this.editor.getValue()
+                             )(
+                                 // Standard Normal variate using Box-Muller transform, from https://stackoverflow.com/a/36481059
+                                 () => {
+                                     var u = 0, v = 0;
+                                     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+                                     while(v === 0) v = Math.random();
+                                     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+                                 },
+                                 time => start = time,
+                                 options => (
+                                     diary.push(
+                                         Math.round( new Date(start).getTime() + options.asleep_at ) + ',' +
+                                         Math.round( new Date(start).getTime() + options. awake_at ) + ',' +
+                                ( options.status || "asleep" ),
+                                     )
+                                 ),
+                                 n => [
+                                     "Sunday",
+                                     "Monday",
+                                     "Tueday",
+                                     "Wednesday",
+                                     "Thursday",
+                                     "Friday",
+                                     "Saturday",
+                                 ][ ( new Date(start).getDay() + n ) % 7 ],
+                                 tz => source.timezone = tz,
+                                 1000,
+                                 1000*60,
+                                 1000*60*60,
+                                 1000*60*60*24,
+                             );
+                         } catch (e) {
+                             this.error = e;
+                             this.error_dialog = true;
+                             return;
+                         }
+
+                         diary_loader.load(
+                             {
+                                 "file_format": "string",
+                                 "contents"   : diary.join("\n"),
+                             },
+                             source
+                         );
+
+                     }, 100 );
+                 },
+                 undo() {
+                     this.editor.undo();
+                 },
+                 redo() {
+                     this.editor.redo();
+                 },
+             },
+         });
+
+        </script>
+    </body>
+</html>
