@@ -7,6 +7,8 @@ Tools to improve your understanding of sleep:
 * [generate a sleep chart](src/sleep-chart.js)
 * [generate a graph of sleep-related events](src/event-graph.js)
 
+[The wiki](https://github.com/sleepdiary/info/wiki) has more information about how to manage your sleeping pattern.
+
 ## Compiling this project
 
 The included [`Dockerfile`](Dockerfile) describes our build environment.  To recompile the project, build and run the environment like this:
