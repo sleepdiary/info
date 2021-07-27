@@ -1,7 +1,7 @@
 /**
  * Calculate various information from a sleep diary
  *
- * @copyright Copyright 2020 Sleep Diary Authors <sleepdiary@pileofstuff.org>
+ * @copyright Copyright 2020-2021 Sleep Diary Authors <sleepdiary@pileofstuff.org>
  *
  * @license
  *
