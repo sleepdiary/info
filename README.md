@@ -20,6 +20,6 @@ This is run automatically by [our GitHub Actions script](.github/workflows/main.
 
 ## License
 
-Sleep Diary Info, Copyright © 2021 Andrew Sayers <sleepdiary@pileofstuff.org>
+Sleep Diary Info, Copyright © 2021 Sleepdiary Developers <sleepdiary@pileofstuff.org>
 
 Sleep Diary Info comes with ABSOLUTELY NO WARRANTY.  This is free software, and you are welcome to redistribute it under certain conditions.  For details, see [the license statement](LICENSE).
