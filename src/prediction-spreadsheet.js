@@ -58,7 +58,7 @@ add_export("prediction_spreadsheet",function( workbook, statistics ) {
           sleep_column = {
               width: 18,
               style: {
-                  numFmt: "NN MMM D, HH:MM",
+                  numFmt: "ddd\\ MMM\\ D,\\ HH:MM",
                   font: {
                       name: 'Calibri',
                       color: { argb: "FFFFFFFF" }
@@ -73,7 +73,7 @@ add_export("prediction_spreadsheet",function( workbook, statistics ) {
           wake_column = {
               width: 18,
               style: {
-                  numFmt: "NN MMM D, HH:MM",
+                  numFmt: "ddd\\ MMM\\ D,\\ HH:MM",
                   font: {
                       name: 'Calibri',
                       color: { argb: "FF000000" }
@@ -91,8 +91,8 @@ add_export("prediction_spreadsheet",function( workbook, statistics ) {
         sleep_column, sleep_column,
         wake_column,  wake_column,
         {},
-        { width: 18, style: { numFmt: "NN MMM D, HH:MM" } },
-        { width: 18, style: { numFmt: "NN MMM D, HH:MM" } },
+        { width: 18, style: { numFmt: "ddd\\ MMM\\ D,\\ HH:MM" } },
+        { width: 18, style: { numFmt: "ddd\\ MMM\\ D,\\ HH:MM" } },
     ];
 
     worksheet.addRows(
