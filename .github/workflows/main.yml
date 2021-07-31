@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
           ref: built
       - name: Build
-        uses: docker://ghcr.io/sleepdiary/builder:main
+        uses: docker://ghcr.io/sleepdiary/builder:latest
         with:
           args: merge-and-push
         env:
