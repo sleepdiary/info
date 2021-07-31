@@ -9,12 +9,16 @@ Tools to improve your understanding of sleep:
 
 [The wiki](https://github.com/sleepdiary/info/wiki) has more information about how to manage your sleeping pattern.
 
-## Compiling this project
+## Developing the project
 
-The included [`Dockerfile`](Dockerfile) describes our build environment.  To recompile the project, build and run the environment like this:
+The recommended way to recompile the project is to [install Docker](https://docs.docker.com/get-started/) and do:
 
-    docker build --tag sleepdiary-info "/path/to/sleepdiary/info"
-    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiary-info
+    # build and test:
+    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiaryproject/builder
+    # build but don't test:
+    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiaryproject/builder build
+    # rebuild whenever files change:
+    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiaryproject/builder run
 
 This is run automatically by [our GitHub Actions script](.github/workflows/main.yml).  If you fork this project on GitHub, [enable GitHub Actions](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow) to rebuild the project automatically whenever you push a change.
 
