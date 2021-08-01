@@ -1,0 +1,29 @@
+{
+  "name": "@sleepdiary/info",
+  "description": "Information derived from sleep diaries",
+  "version": "0.1.0",
+  "main": "sleepdiary-info.min.js",
+  "homepage": "https://github.com/sleepdiary/info",
+  "bugs": "https://github.com/sleepdiary/info/issues",
+  "repository": "github:sleepdiary/info",
+  "private": true,
+  "license": "GPL-2.0-only",
+  "files": [
+    "sleepdiary-info.min.js",
+    "sleepdiary-info.min.js.map"
+  ],
+  "dependencies": {
+    "@sleepdiary/core": "^0.1.0"
+  },
+  "keywords": [
+    "sleep",
+    "sleep-analysis",
+    "sleep-diary",
+    "sleep-format",
+    "circadian",
+    "circadian-rhythm",
+    "circadian-rhythm-disorder",
+    "sleep-disorders",
+    "sleep-tools"
+  ]
+}
