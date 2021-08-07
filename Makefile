@@ -10,7 +10,7 @@ CLOSURE_OPTIONS= \
 
 docs/sleepdiary-info.min.js: src/header.js src/constants.js $(FILES) src/footer.js
 	@echo Compiling $@
-	@google-closure-compiler \
+	@npx google-closure-compiler \
 		$(CLOSURE_OPTIONS) \
 		--js $^ \
 		--create_source_map $@.map --js_output_file $@
