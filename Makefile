@@ -9,11 +9,12 @@ CLOSURE_OPTIONS= \
 		--language_out ECMASCRIPT5 \
 
 docs/sleepdiary-info.min.js: src/header.js src/constants.js $(FILES) src/footer.js
-	google-closure-compiler \
+	@echo Compiling $@
+	@google-closure-compiler \
 		$(CLOSURE_OPTIONS) \
 		--js $^ \
 		--create_source_map $@.map --js_output_file $@
-	echo "//# sourceMappingURL="$(@:docs/%=%).map >> $@
+	@echo "//# sourceMappingURL="$(@:docs/%=%).map >> $@
 
 docs/simulations.html: public/simulations.html
 	cp -a $^ $@
