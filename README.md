@@ -9,18 +9,19 @@ Tools to improve your understanding of sleep:
 
 [The wiki](https://github.com/sleepdiary/info/wiki) has more information about how to manage your sleeping pattern.
 
-## Developing the project
+## Get Involved
 
-The recommended way to recompile the project is to [install Docker](https://docs.docker.com/get-started/) and do:
+### I found a bug, how should I tell you?
 
-    # build and test:
-    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiaryproject/builder
-    # build but don't test:
-    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiaryproject/builder build
-    # rebuild whenever files change:
-    docker run --rm -it -v "/path/to/sleepdiary/info":/app sleepdiaryproject/builder run
+[Create a new bug report](issues/new?assignees=&labels=&template=bug_report.md&title=) and we'll get right on it.
 
-This is run automatically by [our GitHub Actions script](.github/workflows/main.yml).  If you fork this project on GitHub, [enable GitHub Actions](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow) to rebuild the project automatically whenever you push a change.
+### I'd like to request a new feature, what should I say?
+
+Please [create a new feature request](issues/new?assignees=&labels=&template=feature_request.md&title=).  We'll try to sort out your problem.
+
+### I'd like to change the code, how do I get started?
+
+Take a look at our [getting started guide](https://github.com/sleepdiary/docs/blob/main/development/getting-started.md).  Or if you'd like to talk to someone first, [open a discussion](https://github.com/sleepdiary/sleepdiary.github.io/discussions) and describe what you're planning.
 
 ## License
 
