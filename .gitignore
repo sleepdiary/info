@@ -1,1 +1,4 @@
+node_modules
+
+# These files should only be committed to the built branch:
 /docs
