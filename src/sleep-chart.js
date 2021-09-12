@@ -51,6 +51,7 @@ add_export("sleep_chart",function( statistics ) {
                     + '<text class="date day-'+date_obj.getUTCDay()
                     + '" text-anchor="end" x="44" y="'+(y+TEXT_OFFSET)+'">'
                     + new Intl.DateTimeFormat(undefined, { "weekday": "short", "day": "numeric" } ).format(date_obj)
+                    + '<title>' + new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(date_obj) + '</title>'
                     + '</text>'
                     + day.activities
                     .filter( a => a.record.status == "asleep" )
