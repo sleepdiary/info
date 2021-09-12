@@ -73,6 +73,13 @@ add_export("sleep_chart",function( statistics ) {
 
         } else {
 
+            header.push(
+                '<text class="date day-missing'
+                    + '" text-anchor="end" x="30" y="'+(y+TEXT_OFFSET)+'">&#183;&#183;&#183;'
+                    + '<title>no data for this day</title>'
+                    + '</text>'
+            );
+
             prev_day = false;
 
         }
@@ -84,6 +91,7 @@ add_export("sleep_chart",function( statistics ) {
         + 'text{font-size:' + (LINE_HEIGHT-4) + 'px;fill:white}'
         + '.notch{stroke-dasharray:4;stroke:#7F7F7F}'
         + '.day-0,.day-6{font-weight:bold}'
+        + '.day-missing{opacity: 0.5}'
         + '.chart-sleep{fill:#0000FF;stroke:#0000CC}'
         + '.chart-sleep-overlay{opacity: 0.5}'
         + '</style>'
