@@ -26,10 +26,9 @@
  * SOFTWARE.
  */
 
-add_export("sleep_chart",function( statistics ) {
+add_export("sleep_chart",function( activities ) {
 
-    const activities = statistics.activities,
-          bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
+    const bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
     let header = [], body = [], prev_day;
 
