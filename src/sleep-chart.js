@@ -26,11 +26,17 @@
  * SOFTWARE.
  */
 
-add_export("sleep_chart",function( activities, theme ) {
+add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
 
     const bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
-    let header = [], body = [], prev_day;
+    let header = [], body = [], prev_day,
+        headings = ['6pm','midnight','6am','noon']
+    ;
+
+    if ( start_at_midnight ) {
+        headings.push(headings.shift());
+    }
 
     for ( let n=0; n!=activities.length; ++n ) {
         const day = activities[activities.length-1-n],
@@ -114,18 +120,17 @@ add_export("sleep_chart",function( activities, theme ) {
         ],
         body,
         [
-            '<text x="50" y="'     + TEXT_OFFSET + '">6pm</text>' +
-            '<text x="183.75" y="' + TEXT_OFFSET + '" text-anchor="middle">midnight</text>' +
-            '<text x="322.5" y="'  + TEXT_OFFSET + '" text-anchor="middle">6am</text>' +
-            '<text x="461.25" y="' + TEXT_OFFSET + '" text-anchor="middle">noon</text>' +
-            '<text x="50" y="'     + TEXT_OFFSET + '">6pm</text>' +
-            '<text x="595" y="'    + TEXT_OFFSET + '" text-anchor="end">6pm</text>' +
+            '<text x="50" y="'     + TEXT_OFFSET + '">' + headings[0] + '</text>' +
+            '<text x="183.75" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[1] + '</text>' +
+            '<text x="322.5" y="'  + TEXT_OFFSET + '" text-anchor="middle">' + headings[2] + '</text>' +
+            '<text x="461.25" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[3] + '</text>' +
+            '<text x="595" y="'    + TEXT_OFFSET + '" text-anchor="end">' + headings[0] + '</text>' +
 
-            '<text x="50" y="'     + bottom + '">6pm</text>' +
-            '<text x="183.75" y="' + bottom + '" text-anchor="middle">midnight</text>' +
-            '<text x="322.5" y="'  + bottom + '" text-anchor="middle">6am</text>' +
-            '<text x="461.25" y="' + bottom + '" text-anchor="middle">noon</text>' +
-            '<text x="595" y="'    + bottom + '" text-anchor="end">6pm</text>'
+            '<text x="50" y="'     + bottom + '">' + headings[0] + '</text>' +
+            '<text x="183.75" y="' + bottom + '" text-anchor="middle">' + headings[1] + '</text>' +
+            '<text x="322.5" y="'  + bottom + '" text-anchor="middle">' + headings[2] + '</text>' +
+            '<text x="461.25" y="' + bottom + '" text-anchor="middle">' + headings[3] + '</text>' +
+            '<text x="595" y="'    + bottom + '" text-anchor="end">' + headings[0] + '</text>'
         ],
     ).join('') + (
 
