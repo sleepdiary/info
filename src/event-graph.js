@@ -52,7 +52,7 @@ add_export("event_graph",function( statistics, theme, lines ) {
               ],
               "sleep": [
                   "sleep",
-                  'Asleep at',
+                  'Fall-asleep at',
                   // triangle pointing down:
                   -LH4,-LH4,
                   ' h '  + LH2 +
@@ -60,7 +60,7 @@ add_export("event_graph",function( statistics, theme, lines ) {
               ],
               "asleep": [
                   "asleep",
-                  'Total sleep time',
+                  'Sleep length',
                   // rhombus:
                   -LH4,0,
                   ' l '  + ( LH4) + ',' + ( LH4) +
