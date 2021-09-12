@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-add_export("event_graph",function( statistics ) {
+add_export("event_graph",function( statistics, theme ) {
 
     if ( !(
         statistics.schedule.wake &&
@@ -95,22 +95,33 @@ add_export("event_graph",function( statistics ) {
     ;
 
     let ret = (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + ((graph_notch_max+5)*LINE_HEIGHT) + '" style="width:100%;height:auto;background:#3F3F3F">'
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + ((graph_notch_max+5)*LINE_HEIGHT) + '" class="event-graph ' + (theme||'') + '">'
       + '<style>'
-      + 'text{font-size:' + (LINE_HEIGHT-4) + 'px;fill:white}'
-      + '.axes{fill:none;stroke:white}'
-      + '.notch{stroke-dasharray:4;stroke:white}'
-      + '.wake{fill:#AA9739;opacity:0.5}'
-      + '.sleep{fill:#2D882D;opacity:0.5}'
-      + '.asleep{fill:#162955;opacity:0.5}'
-      + '.day-length{fill:#AA3939;opacity:0.5}'
-      + '.wake-avg{fill:none;stroke:#FFF0AA}'
-      + '.sleep-avg{fill:none;stroke:#88CC88}'
-      + '.asleep-avg{fill:none;stroke:#9775AA}'
-      + '.day-length-avg{fill:none;stroke:#FFAAAA}'
-      + '.overlay{opacity:0.25}'
-      + '.column{transform-box:fill-box;transform:rotate(45deg)}'
+
+      + 'svg.event-graph{width:100%;height:auto;background:white}'
+      + '.event-graph text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
+      + '.event-graph .axes{fill:none;stroke:black}'
+      + '.event-graph .notch{stroke-dasharray:4;stroke:black}'
+      + '.event-graph .wake{fill:#AA9739;opacity:0.5}'
+      + '.event-graph .sleep{fill:#2D882D;opacity:0.5}'
+      + '.event-graph .asleep{fill:#162955;opacity:0.5}'
+      + '.event-graph .day-length{fill:#AA3939;opacity:0.5}'
+      + '.event-graph .wake-avg{fill:none;stroke:#AA9739}'
+      + '.event-graph .sleep-avg{fill:none;stroke:#88CC88}'
+      + '.event-graph .asleep-avg{fill:none;stroke:#9775AA}'
+      + '.event-graph .day-length-avg{fill:none;stroke:#FFAAAA}'
+      + '.event-graph .overlay{opacity:0.25}'
+      + '.event-graph .column{transform-box:fill-box;transform:rotate(45deg)}'
+
+      // dark theme:
+      + '.event-graph.dark{background:#3F3F3F}'
+      + '.event-graph.dark text{fill:white}'
+      + '.event-graph.dark .chart-sleep{fill:#0000FF;stroke:#6666CC}'
+      + '.event-graph.dark .axes,.event-graph .notch{stroke:white}'
+      + '.event-graph.dark .wake-avg{stroke:#FFF0AA}'
+
       + '</style>'
+
       + '<path class="axes" d="M' + graph_left + ' ' + graph_top + ' v ' + graph_range + ' h ' + graph_width + '"/>'
     ),
         columns = statistics.activities,
