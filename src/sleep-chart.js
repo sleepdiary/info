@@ -89,7 +89,7 @@ add_export("sleep_chart",function( activities, theme ) {
 
         + '<style>'
         + 'svg.sleep-chart{width:100%;height:auto;background:white}'
-        + '.sleep-chart text{font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
+        + '.sleep-chart text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
         + '.sleep-chart .notch{stroke-dasharray:4;stroke:#7F7F7F}'
         + '.sleep-chart .day-0,.day-6{font-weight:bold}'
         + '.sleep-chart .day-missing{opacity: 0.5}'
