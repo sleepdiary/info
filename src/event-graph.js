@@ -113,6 +113,10 @@ add_export("event_graph",function( statistics, theme ) {
       + '.event-graph .overlay{opacity:0.25}'
       + '.event-graph .column{transform-box:fill-box;transform:rotate(45deg)}'
 
+      // animation:
+      + '@keyframes highlighted{to{stroke-dashoffset:-8px}}'
+      + '.highlighted{stroke-dasharray:4;animation:0.75s infinite linear highlighted}'
+
       // dark theme:
       + '.event-graph.dark{background:#3F3F3F}'
       + '.event-graph.dark text{fill:white}'
@@ -190,9 +194,19 @@ add_export("event_graph",function( statistics, theme ) {
             const icon = icons[n];
             current_column = 0;
             return (
-                // legend:
-                '<path class="' + icon[0] + '" ' + 'd="M ' + (75 + n*125 + icon[2]) + ',' + (graph_bottom+LINE_HEIGHT*3+icon[3]) + icon[4] + ' z" />'
-              + '<text x="' + (85 + n*125) + '" y="' + (graph_bottom+LINE_HEIGHT*3+4) + '">' + icon[1] + '</text>'
+              // legend:
+                '<g '
+                    + 'onmouseover="'
+                    +   '{var elements=document.getElementsByClassName(\''+icon[0]+'-avg\');'
+                    +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal+=\' highlighted\'}'
+                    + '" '
+                    + 'onmouseout="'
+                    +   '{var elements=document.getElementsByClassName(\''+icon[0]+'-avg\');'
+                    +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal=elements[n].className.baseVal.replace(/ highlighted/,\'\')}'
+                    + '">'
+                + '<path class="' + icon[0] + '" ' + 'd="M ' + (75 + n*125 + icon[2]) + ',' + (graph_bottom+LINE_HEIGHT*3+icon[3]) + icon[4] + ' z" />'
+                + '<text x="' + (85 + n*125) + '" y="' + (graph_bottom+LINE_HEIGHT*3+4) + '">' + icon[1] + '</text>'
+                + '</g>'
             ) + s.durations.map( (d,n) =>
                 // underlay data points:
                 d
