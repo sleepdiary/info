@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-add_export("sleep_chart",function( activities ) {
+add_export("sleep_chart",function( activities, theme ) {
 
     const bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
@@ -85,14 +85,22 @@ add_export("sleep_chart",function( activities ) {
     }
 
     return [
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + (activities.length*LINE_HEIGHT) + '" style="width:100%;height:auto;background:#3F3F3F">'
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + (activities.length*LINE_HEIGHT) + '" class="sleep-chart ' + (theme||'') + '">'
+
         + '<style>'
-        + 'text{font-size:' + (LINE_HEIGHT-4) + 'px;fill:white}'
-        + '.notch{stroke-dasharray:4;stroke:#7F7F7F}'
-        + '.day-0,.day-6{font-weight:bold}'
-        + '.day-missing{opacity: 0.5}'
-        + '.chart-sleep{fill:#0000FF;stroke:#0000CC}'
-        + '.chart-sleep-overlay{opacity: 0.5}'
+        + 'svg.sleep-chart{width:100%;height:auto;background:white}'
+        + '.sleep-chart text{font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
+        + '.sleep-chart .notch{stroke-dasharray:4;stroke:#7F7F7F}'
+        + '.sleep-chart .day-0,.day-6{font-weight:bold}'
+        + '.sleep-chart .day-missing{opacity: 0.5}'
+        + '.sleep-chart .chart-sleep{fill:#CCCCFF;stroke:#AAAACC}'
+        + '.sleep-chart .chart-sleep-overlay{opacity: 0.5}'
+
+        // dark theme:
+        + '.sleep-chart.dark{background:#3F3F3F}'
+        + '.sleep-chart.dark text{fill:white}'
+        + '.sleep-chart.dark .chart-sleep{fill:#0000FF;stroke:#6666CC}'
+
         + '</style>'
     ].concat(
         header,
