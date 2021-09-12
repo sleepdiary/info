@@ -26,7 +26,9 @@
  * SOFTWARE.
  */
 
-add_export("event_graph",function( statistics, theme ) {
+add_export("event_graph",function( statistics, theme, lines ) {
+
+    if ( !lines ) lines = ["wake","asleep","sleep","day-length"];
 
     if ( !(
         statistics.schedule.wake &&
@@ -39,8 +41,8 @@ add_export("event_graph",function( statistics, theme ) {
 
     const LH4 = LINE_HEIGHT/4,
           LH2 = LINE_HEIGHT/2,
-          icons = [
-              [
+          available_icons = {
+              "wake": [
                   "wake",
                   'Wake at',
                   // triangle pointing up:
@@ -48,7 +50,7 @@ add_export("event_graph",function( statistics, theme ) {
                   ' h '  + LH2 +
                   ' l ' + (-LH4) + ',' + (-LH2),
               ],
-              [
+              "sleep": [
                   "sleep",
                   'Asleep at',
                   // triangle pointing down:
@@ -56,7 +58,7 @@ add_export("event_graph",function( statistics, theme ) {
                   ' h '  + LH2 +
                   ' l ' + -LH4 + ',' + LH2,
               ],
-              [
+              "asleep": [
                   "asleep",
                   'Total sleep time',
                   // rhombus:
@@ -65,7 +67,7 @@ add_export("event_graph",function( statistics, theme ) {
                   ' l '  + ( LH4) + ',' + (-LH4) +
                   ' l '  + (-LH4) + ',' + (-LH4)
               ],
-              [
+              "day-length": [
                   "day-length",
                   'Day length',
                   // rhombus:
@@ -74,13 +76,15 @@ add_export("event_graph",function( statistics, theme ) {
                   ' l '  + ( LH4) + ',' + (-LH4) +
                   ' l '  + (-LH4) + ',' + (-LH4)
               ],
-          ],
-          series = [
-              statistics.schedule.wake,
-              statistics.schedule.sleep,
-              statistics.summary_asleep,
-              statistics.summary_days
-          ],
+          },
+          available_series = {
+              "wake": statistics.schedule.wake,
+              "sleep": statistics.schedule.sleep,
+              "asleep": statistics.summary_asleep,
+              "day-length": statistics.summary_days,
+          },
+          icons = lines.map( line => available_icons[line] ),
+          series = lines.map( line => available_series[line] ),
           day_lengths = statistics.summary_days.durations.filter( d => d ).sort( (a,b) => a-b ),
           graph_notch_max = Math.ceil( // whole number of pairs of hours
               day_lengths[ Math.floor( day_lengths.length * 0.95 ) ]
