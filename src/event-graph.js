@@ -26,7 +26,9 @@
  * SOFTWARE.
  */
 
-add_export("event_graph",function( statistics ) {
+add_export("event_graph",function( statistics, theme, lines ) {
+
+    if ( !lines ) lines = ["wake","asleep","sleep","day-length"];
 
     if ( !(
         statistics.schedule.wake &&
@@ -39,8 +41,8 @@ add_export("event_graph",function( statistics ) {
 
     const LH4 = LINE_HEIGHT/4,
           LH2 = LINE_HEIGHT/2,
-          icons = [
-              [
+          available_icons = {
+              "wake": [
                   "wake",
                   'Wake at',
                   // triangle pointing up:
@@ -48,7 +50,7 @@ add_export("event_graph",function( statistics ) {
                   ' h '  + LH2 +
                   ' l ' + (-LH4) + ',' + (-LH2),
               ],
-              [
+              "sleep": [
                   "sleep",
                   'Asleep at',
                   // triangle pointing down:
@@ -56,7 +58,7 @@ add_export("event_graph",function( statistics ) {
                   ' h '  + LH2 +
                   ' l ' + -LH4 + ',' + LH2,
               ],
-              [
+              "asleep": [
                   "asleep",
                   'Total sleep time',
                   // rhombus:
@@ -65,7 +67,7 @@ add_export("event_graph",function( statistics ) {
                   ' l '  + ( LH4) + ',' + (-LH4) +
                   ' l '  + (-LH4) + ',' + (-LH4)
               ],
-              [
+              "day-length": [
                   "day-length",
                   'Day length',
                   // rhombus:
@@ -74,13 +76,15 @@ add_export("event_graph",function( statistics ) {
                   ' l '  + ( LH4) + ',' + (-LH4) +
                   ' l '  + (-LH4) + ',' + (-LH4)
               ],
-          ],
-          series = [
-              statistics.schedule.wake,
-              statistics.schedule.sleep,
-              statistics.summary_asleep,
-              statistics.summary_days
-          ],
+          },
+          available_series = {
+              "wake": statistics.schedule.wake,
+              "sleep": statistics.schedule.sleep,
+              "asleep": statistics.summary_asleep,
+              "day-length": statistics.summary_days,
+          },
+          icons = lines.map( line => available_icons[line] ),
+          series = lines.map( line => available_series[line] ),
           day_lengths = statistics.summary_days.durations.filter( d => d ).sort( (a,b) => a-b ),
           graph_notch_max = Math.ceil( // whole number of pairs of hours
               day_lengths[ Math.floor( day_lengths.length * 0.95 ) ]
@@ -95,22 +99,43 @@ add_export("event_graph",function( statistics ) {
     ;
 
     let ret = (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + ((graph_notch_max+5)*LINE_HEIGHT) + '" style="width:100%;height:auto;background:#3F3F3F">'
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + ((graph_notch_max+5)*LINE_HEIGHT) + '" class="event-graph ' + (theme||'') + '">'
       + '<style>'
-      + 'text{font-size:' + (LINE_HEIGHT-4) + 'px;fill:white}'
-      + '.axes{fill:none;stroke:white}'
-      + '.notch{stroke-dasharray:4;stroke:white}'
-      + '.wake{fill:#AA9739;opacity:0.5}'
-      + '.sleep{fill:#2D882D;opacity:0.5}'
-      + '.asleep{fill:#162955;opacity:0.5}'
-      + '.day-length{fill:#AA3939;opacity:0.5}'
-      + '.wake-avg{fill:none;stroke:#FFF0AA}'
-      + '.sleep-avg{fill:none;stroke:#88CC88}'
-      + '.asleep-avg{fill:none;stroke:#9775AA}'
-      + '.day-length-avg{fill:none;stroke:#FFAAAA}'
-      + '.overlay{opacity:0.25}'
-      + '.column{transform-box:fill-box;transform:rotate(45deg)}'
+
+      + 'svg.event-graph{width:100%;height:auto;background:white}'
+      + '.event-graph text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
+      + '.event-graph .axes{fill:none;stroke:black}'
+      + '.event-graph .notch{stroke-dasharray:4;stroke:black}'
+
+      + '.event-graph .wake{fill:#AA9739;opacity:0.5}'
+      + '.event-graph .sleep{fill:#2D882D;opacity:0.5}'
+      + '.event-graph .asleep{fill:#8888BB;opacity:0.5}'
+      + '.event-graph .day-length{fill:#AA3939;opacity:0.5}'
+
+      + '.event-graph .line{fill:none;stroke-width:2px}'
+      + '.event-graph .wake-avg{stroke:#AA9739}'
+      + '.event-graph .sleep-avg{stroke:#88CC88}'
+      + '.event-graph .asleep-avg{stroke:#9775AA}'
+      + '.event-graph .day-length-avg{stroke:#FFAAAA}'
+
+      + '.event-graph .overlay{opacity:0.25}'
+      + '.event-graph .column{transform-box:fill-box;transform:rotate(45deg)}'
+
+      // animation:
+      + '@keyframes highlighted{to{stroke-dashoffset:-8px}}'
+      + '.highlighted{stroke-dasharray:4;animation:0.75s infinite linear highlighted}'
+
+      // dark theme:
+      + '.event-graph.dark{background:#3F3F3F}'
+      + '.event-graph.dark text{fill:white}'
+      + '.event-graph.dark .chart-sleep{fill:#0000FF;stroke:#6666CC}'
+      + '.event-graph.dark .axes,.event-graph .notch{stroke:white}'
+      + '.event-graph.dark .wake-avg{stroke:#FFF0AA}'
+      + '.event-graph.dark .asleep-avg{stroke:#B494C6}'
+      + '.event-graph.dark .asleep{fill:#7C35AC}'
+
       + '</style>'
+
       + '<path class="axes" d="M' + graph_left + ' ' + graph_top + ' v ' + graph_range + ' h ' + graph_width + '"/>'
     ),
         columns = statistics.activities,
@@ -179,9 +204,19 @@ add_export("event_graph",function( statistics ) {
             const icon = icons[n];
             current_column = 0;
             return (
-                // legend:
-                '<path class="' + icon[0] + '" ' + 'd="M ' + (75 + n*125 + icon[2]) + ',' + (graph_bottom+LINE_HEIGHT*3+icon[3]) + icon[4] + ' z" />'
-              + '<text x="' + (85 + n*125) + '" y="' + (graph_bottom+LINE_HEIGHT*3+4) + '">' + icon[1] + '</text>'
+              // legend:
+                '<g '
+                    + 'onmouseover="'
+                    +   '{var elements=document.getElementsByClassName(\''+icon[0]+'-avg\');'
+                    +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal+=\' highlighted\'}'
+                    + '" '
+                    + 'onmouseout="'
+                    +   '{var elements=document.getElementsByClassName(\''+icon[0]+'-avg\');'
+                    +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal=elements[n].className.baseVal.replace(/ highlighted/,\'\')}'
+                    + '">'
+                + '<path class="' + icon[0] + '" ' + 'd="M ' + (75 + n*125 + icon[2]) + ',' + (graph_bottom+LINE_HEIGHT*3+icon[3]) + icon[4] + ' z" />'
+                + '<text x="' + (85 + n*125) + '" y="' + (graph_bottom+LINE_HEIGHT*3+4) + '">' + icon[1] + '</text>'
+                + '</g>'
             ) + s.durations.map( (d,n) =>
                 // underlay data points:
                 d
@@ -219,7 +254,7 @@ add_export("event_graph",function( statistics ) {
                 prev_column = current_column
             ;
             return (
-                '<path class="' + icons[n][0] + '-avg" d="M '
+                '<path class="line ' + icons[n][0] + '-avg" d="M '
                 + s.rolling_average.map( (average,n) => {
                     if ( average === undefined ) return '';
                     const x = column_pos(s.timestamps[n]);
