@@ -31,20 +31,25 @@ add_export("sleep_chart",function( statistics ) {
     const activities = statistics.activities,
           bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
-    let header = [], body = [];
+    let header = [], body = [], prev_day;
 
     for ( let n=0; n!=activities.length; ++n ) {
-        const day = activities[activities.length-1-n];
+        const day = activities[activities.length-1-n],
+              y = n*LINE_HEIGHT
+        ;
+
+        if ( n && (day||prev_day) ) {
+            header.push('<line class="notch" x1="0" y1="'+y+'" x2="600" y2="'+y+'"/>')
+        }
+
         if ( day ) {
 
-            const y = n*LINE_HEIGHT,
-                  date = day["id"].split("T")[0],
+            const date = day["id"].split("T")[0],
                   date_obj = new Date(date + "T00:00:00.000Z")
             ;
 
             header.push(
-                (n?'<line class="notch" x1="0" y1="'+y+'" x2="600" y2="'+y+'"/>':'')
-                    + '<text class="date day-'+date_obj.getUTCDay()
+                '<text class="date day-'+date_obj.getUTCDay()
                     + '" text-anchor="end" x="44" y="'+(y+TEXT_OFFSET)+'">'
                     + new Intl.DateTimeFormat(undefined, { "weekday": "short", "day": "numeric" } ).format(date_obj)
                     + '<title>' + new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(date_obj) + '</title>'
@@ -63,6 +68,12 @@ add_export("sleep_chart",function( statistics ) {
                         a => '<rect class="chart-sleep chart-sleep-overlay" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(45+555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '"/>'
                     ).join('')
             );
+
+            prev_day = true;
+
+        } else {
+
+            prev_day = false;
 
         }
     }
