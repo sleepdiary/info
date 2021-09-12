@@ -106,14 +106,18 @@ add_export("event_graph",function( statistics, theme, lines ) {
       + '.event-graph text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
       + '.event-graph .axes{fill:none;stroke:black}'
       + '.event-graph .notch{stroke-dasharray:4;stroke:black}'
+
       + '.event-graph .wake{fill:#AA9739;opacity:0.5}'
       + '.event-graph .sleep{fill:#2D882D;opacity:0.5}'
-      + '.event-graph .asleep{fill:#162955;opacity:0.5}'
+      + '.event-graph .asleep{fill:#8888BB;opacity:0.5}'
       + '.event-graph .day-length{fill:#AA3939;opacity:0.5}'
-      + '.event-graph .wake-avg{fill:none;stroke:#AA9739}'
-      + '.event-graph .sleep-avg{fill:none;stroke:#88CC88}'
-      + '.event-graph .asleep-avg{fill:none;stroke:#9775AA}'
-      + '.event-graph .day-length-avg{fill:none;stroke:#FFAAAA}'
+
+      + '.event-graph .line{fill:none;stroke-width:2px}'
+      + '.event-graph .wake-avg{stroke:#AA9739}'
+      + '.event-graph .sleep-avg{stroke:#88CC88}'
+      + '.event-graph .asleep-avg{stroke:#9775AA}'
+      + '.event-graph .day-length-avg{stroke:#FFAAAA}'
+
       + '.event-graph .overlay{opacity:0.25}'
       + '.event-graph .column{transform-box:fill-box;transform:rotate(45deg)}'
 
@@ -127,6 +131,8 @@ add_export("event_graph",function( statistics, theme, lines ) {
       + '.event-graph.dark .chart-sleep{fill:#0000FF;stroke:#6666CC}'
       + '.event-graph.dark .axes,.event-graph .notch{stroke:white}'
       + '.event-graph.dark .wake-avg{stroke:#FFF0AA}'
+      + '.event-graph.dark .asleep-avg{stroke:#B494C6}'
+      + '.event-graph.dark .asleep{fill:#7C35AC}'
 
       + '</style>'
 
@@ -248,7 +254,7 @@ add_export("event_graph",function( statistics, theme, lines ) {
                 prev_column = current_column
             ;
             return (
-                '<path class="' + icons[n][0] + '-avg" d="M '
+                '<path class="line ' + icons[n][0] + '-avg" d="M '
                 + s.rolling_average.map( (average,n) => {
                     if ( average === undefined ) return '';
                     const x = column_pos(s.timestamps[n]);
