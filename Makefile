@@ -16,9 +16,6 @@ docs/sleepdiary-info.min.js: src/header.js src/constants.js $(FILES) src/footer.
 		--create_source_map $@.map --js_output_file $@
 	@echo "//# sourceMappingURL="$(@:docs/%=%).map >> $@
 
-docs/simulations.html: public/simulations.html
-	cp -a $^ $@
-
 build: docs/sleepdiary-info.min.js docs/simulations.html
 
 clean:
