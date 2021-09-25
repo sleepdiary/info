@@ -7,8 +7,6 @@ Tools to improve your understanding of sleep:
 - [generate a sleep chart](src/sleep-chart.js)
 - [generate a graph of sleep-related events](src/event-graph.js)
 
-[The wiki](https://github.com/sleepdiary/info/wiki) has more information about how to manage your sleeping pattern.
-
 ## Get Involved
 
 ### I found a bug, how should I tell you?
