@@ -96,16 +96,17 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         + '<style>'
         + 'svg.sleep-chart{width:100%;height:auto;background:white}'
         + '.sleep-chart text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
+        + '.sleep-chart text.heading{fill:#ddd;text-shadow:1px 1px black}'
         + '.sleep-chart .notch{stroke-dasharray:4;stroke:#7F7F7F}'
         + '.sleep-chart .day-0,.day-6{font-weight:bold}'
         + '.sleep-chart .day-missing{opacity: 0.5}'
-        + '.sleep-chart .chart-sleep{fill:#CCCCFF;stroke:#AAAACC}'
+        + '.sleep-chart .chart-sleep{fill:#0000FF;stroke:#6666CC}'
         + '.sleep-chart .chart-sleep-overlay{opacity: 0.5}'
 
         // dark theme:
         + '.sleep-chart.dark{background:#3F3F3F}'
         + '.sleep-chart.dark text{fill:white}'
-        + '.sleep-chart.dark .chart-sleep{fill:#0000FF;stroke:#6666CC}'
+        + '.sleep-chart.dark text.heading{fill:white;text-shadow:none}'
 
         + '</style>'
     ].concat(
@@ -120,17 +121,17 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         ],
         body,
         [
-            '<text x="50" y="'     + TEXT_OFFSET + '">' + headings[0] + '</text>' +
-            '<text x="183.75" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[1] + '</text>' +
-            '<text x="322.5" y="'  + TEXT_OFFSET + '" text-anchor="middle">' + headings[2] + '</text>' +
-            '<text x="461.25" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[3] + '</text>' +
-            '<text x="595" y="'    + TEXT_OFFSET + '" text-anchor="end">' + headings[0] + '</text>' +
+            '<text class="heading" x="50" y="'     + TEXT_OFFSET + '">' + headings[0] + '</text>' +
+            '<text class="heading" x="183.75" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[1] + '</text>' +
+            '<text class="heading" x="322.5" y="'  + TEXT_OFFSET + '" text-anchor="middle">' + headings[2] + '</text>' +
+            '<text class="heading" x="461.25" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[3] + '</text>' +
+            '<text class="heading" x="595" y="'    + TEXT_OFFSET + '" text-anchor="end">' + headings[0] + '</text>' +
 
-            '<text x="50" y="'     + bottom + '">' + headings[0] + '</text>' +
-            '<text x="183.75" y="' + bottom + '" text-anchor="middle">' + headings[1] + '</text>' +
-            '<text x="322.5" y="'  + bottom + '" text-anchor="middle">' + headings[2] + '</text>' +
-            '<text x="461.25" y="' + bottom + '" text-anchor="middle">' + headings[3] + '</text>' +
-            '<text x="595" y="'    + bottom + '" text-anchor="end">' + headings[0] + '</text>'
+            '<text class="heading" x="50" y="'     + bottom + '">' + headings[0] + '</text>' +
+            '<text class="heading" x="183.75" y="' + bottom + '" text-anchor="middle">' + headings[1] + '</text>' +
+            '<text class="heading" x="322.5" y="'  + bottom + '" text-anchor="middle">' + headings[2] + '</text>' +
+            '<text class="heading" x="461.25" y="' + bottom + '" text-anchor="middle">' + headings[3] + '</text>' +
+            '<text class="heading" x="595" y="'    + bottom + '" text-anchor="end">' + headings[0] + '</text>'
         ],
     ).join('') + (
 
