@@ -43,7 +43,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         month_backgrounds.push('<rect class="month month-' + (month_backgrounds.length%2) + '" x="0" y="' + prev_month_boundary + '" width="600" height="' + (y-prev_month_boundary) + '"/>');
         if ( prev_month_boundary && n!=activities.length-1 ) {
             month_labels.push(
-                '<text class="month" text-anchor="end" x="590" y="' + (prev_month_boundary+TEXT_OFFSET) + '">' + prev_month_string + '</text>'
+                '<text class="month month-' + (month_backgrounds.length%2) + '" text-anchor="end" x="590" y="' + (prev_month_boundary+TEXT_OFFSET) + '">' + prev_month_string + '</text>'
             );
         }
     }
@@ -70,7 +70,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
             if ( prev_month != date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth() ) {
                 add_month(y,n);
                 prev_month = date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth();
-                prev_month_string = new Intl.DateTimeFormat(undefined, { "month": "long" } ).format(date_obj);
+                prev_month_string = new Intl.DateTimeFormat(undefined, { "year": "numeric", "month": "long" } ).format(date_obj);
                 prev_month_boundary = y;
             }
 
@@ -120,6 +120,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         + 'svg.sleep-chart{width:100%;height:auto}'
         + '.sleep-chart text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
         + '.sleep-chart text.heading,.sleep-chart text.month{fill:#ddd;text-shadow:1px 1px black}'
+        + '.sleep-chart text.heading,.sleep-chart text.month.month-0{fill:white}'
         + '.sleep-chart .notch{stroke-dasharray:4;stroke:#7F7F7F}'
         + '.sleep-chart .day-0,.day-6{font-weight:bold}'
         + '.sleep-chart .day-missing{opacity: 0.5}'
