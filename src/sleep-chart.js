@@ -31,7 +31,12 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
     const bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
     let header = [], body = [], prev_day,
-        headings = ['6pm','midnight','6am','noon'],
+        headings = [
+            [ '6pm'     , 50     , '' ],
+            [ 'midnight', 183.75 , ' text-anchor="middle"' ],
+            [ '6am'     , 322.5  , ' text-anchor="middle"' ],
+            [ 'noon'    , 461.25 , ' text-anchor="middle"' ],
+        ],
         month_backgrounds = [],
         month_labels = [],
         prev_month_boundary = 0,
@@ -43,6 +48,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         month_backgrounds.push('<rect class="month month-' + (month_backgrounds.length%2) + '" x="0" y="' + prev_month_boundary + '" width="600" height="' + (y-prev_month_boundary) + '"/>');
         if ( prev_month_boundary && n!=activities.length-1 ) {
             month_labels.push(
+                '<text class="shadow" text-anchor="end" x="591" y="' + (prev_month_boundary+TEXT_OFFSET+1) + '">' + prev_month_string + '</text>' +
                 '<text class="month month-' + (month_backgrounds.length%2) + '" text-anchor="end" x="590" y="' + (prev_month_boundary+TEXT_OFFSET) + '">' + prev_month_string + '</text>'
             );
         }
@@ -51,6 +57,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
     if ( start_at_midnight ) {
         headings.push(headings.shift());
     }
+    headings.push([ headings[0][0], 595, ' text-anchor="end"' ]);
 
     for ( let n=0; n!=activities.length; ++n ) {
         const day = activities[activities.length-1-n],
@@ -119,8 +126,9 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         + '<style>'
         + 'svg.sleep-chart{width:100%;height:auto}'
         + '.sleep-chart text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
-        + '.sleep-chart text.heading,.sleep-chart text.month{fill:#ddd;text-shadow:1px 1px black}'
-        + '.sleep-chart text.heading,.sleep-chart text.month.month-0{fill:white}'
+        + '.sleep-chart text.heading,.sleep-chart text.month{fill:#ddd}'
+        + '.sleep-chart text.month.month-0{fill:white}'
+        + '.sleep-chart text.shadow{fill:black}'
         + '.sleep-chart .notch{stroke-dasharray:4;stroke:#7F7F7F}'
         + '.sleep-chart .day-0,.day-6{font-weight:bold}'
         + '.sleep-chart .day-missing{opacity: 0.5}'
@@ -132,8 +140,8 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         // dark theme:
         + '.sleep-chart.dark .month-0 { fill: #3F3F3F }'
         + '.sleep-chart.dark .month-1 { fill: #2F2F2F }'
-        + '.sleep-chart.dark text{fill:white}'
-        + '.sleep-chart.dark text.heading,.sleep-chart.dark text.month{fill:white;text-shadow:none}'
+        + '.sleep-chart.dark text,.sleep-chart.dark text.heading,.sleep-chart.dark text.month{fill:white}'
+        + '.sleep-chart.dark text.shadow{fill:none}'
 
         + '</style>'
     ].concat(
@@ -149,19 +157,12 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         ],
         body,
         month_labels,
-        [
-            '<text class="heading" x="50" y="'     + TEXT_OFFSET + '">' + headings[0] + '</text>' +
-            '<text class="heading" x="183.75" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[1] + '</text>' +
-            '<text class="heading" x="322.5" y="'  + TEXT_OFFSET + '" text-anchor="middle">' + headings[2] + '</text>' +
-            '<text class="heading" x="461.25" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[3] + '</text>' +
-            '<text class="heading" x="595" y="'    + TEXT_OFFSET + '" text-anchor="end">' + headings[0] + '</text>' +
-
-            '<text class="heading" x="50" y="'     + bottom + '">' + headings[0] + '</text>' +
-            '<text class="heading" x="183.75" y="' + bottom + '" text-anchor="middle">' + headings[1] + '</text>' +
-            '<text class="heading" x="322.5" y="'  + bottom + '" text-anchor="middle">' + headings[2] + '</text>' +
-            '<text class="heading" x="461.25" y="' + bottom + '" text-anchor="middle">' + headings[3] + '</text>' +
-            '<text class="heading" x="595" y="'    + bottom + '" text-anchor="end">' + headings[0] + '</text>'
-        ],
+        headings.map( heading =>
+            '<text class="shadow" x="' + (heading[1]+1) + '" y="' + (TEXT_OFFSET+1) + '"' + heading[2] + '>' + heading[0] + '</text>' +
+            '<text class="shadow" x="' + (heading[1]+1) + '" y="' + (bottom+1)      + '"' + heading[2] + '>' + heading[0] + '</text>' +
+            '<text class="heading" x="' + heading[1] + '" y="' + TEXT_OFFSET + '"' + heading[2] + '>' + heading[0] + '</text>' +
+            '<text class="heading" x="' + heading[1] + '" y="' + bottom      + '"' + heading[2] + '>' + heading[0] + '</text>'
+        ),
     ).join('') + (
 
         '</svg>'
