@@ -31,8 +31,22 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
     const bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
     let header = [], body = [], prev_day,
-        headings = ['6pm','midnight','6am','noon']
+        headings = ['6pm','midnight','6am','noon'],
+        month_backgrounds = [],
+        month_labels = [],
+        prev_month_boundary = 0,
+        prev_month_string = '',
+        prev_month = -1
     ;
+
+    function add_month(y,n) {
+        month_backgrounds.push('<rect class="month month-' + (month_backgrounds.length%2) + '" x="0" y="' + prev_month_boundary + '" width="600" height="' + (y-prev_month_boundary) + '"/>');
+        if ( prev_month_boundary && n!=activities.length-1 ) {
+            month_labels.push(
+                '<text class="month" text-anchor="end" x="590" y="' + (prev_month_boundary+TEXT_OFFSET) + '">' + prev_month_string + '</text>'
+            );
+        }
+    }
 
     if ( start_at_midnight ) {
         headings.push(headings.shift());
@@ -52,6 +66,13 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
             const date = day["id"].split("T")[0],
                   date_obj = new Date(date + "T00:00:00.000Z")
             ;
+
+            if ( prev_month != date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth() ) {
+                add_month(y,n);
+                prev_month = date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth();
+                prev_month_string = new Intl.DateTimeFormat(undefined, { "month": "long" } ).format(date_obj);
+                prev_month_boundary = y;
+            }
 
             header.push(
                 '<text class="date day-'+date_obj.getUTCDay()
@@ -90,26 +111,32 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         }
     }
 
+    add_month(activities.length*LINE_HEIGHT,prev_month_boundary/LINE_HEIGHT);
+
     return [
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + (activities.length*LINE_HEIGHT) + '" class="sleep-chart ' + (theme||'') + '">'
 
         + '<style>'
-        + 'svg.sleep-chart{width:100%;height:auto;background:white}'
+        + 'svg.sleep-chart{width:100%;height:auto}'
         + '.sleep-chart text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
-        + '.sleep-chart text.heading{fill:#ddd;text-shadow:1px 1px black}'
+        + '.sleep-chart text.heading,.sleep-chart text.month{fill:#ddd;text-shadow:1px 1px black}'
         + '.sleep-chart .notch{stroke-dasharray:4;stroke:#7F7F7F}'
         + '.sleep-chart .day-0,.day-6{font-weight:bold}'
         + '.sleep-chart .day-missing{opacity: 0.5}'
         + '.sleep-chart .chart-sleep{fill:#0000FF;stroke:#6666CC}'
         + '.sleep-chart .chart-sleep-overlay{opacity: 0.5}'
+        + '.sleep-chart .month-0 { fill: white }'
+        + '.sleep-chart .month-1 { fill: #AAA }'
 
         // dark theme:
-        + '.sleep-chart.dark{background:#3F3F3F}'
+        + '.sleep-chart.dark .month-0 { fill: #3F3F3F }'
+        + '.sleep-chart.dark .month-1 { fill: #2F2F2F }'
         + '.sleep-chart.dark text{fill:white}'
-        + '.sleep-chart.dark text.heading{fill:white;text-shadow:none}'
+        + '.sleep-chart.dark text.heading,.sleep-chart.dark text.month{fill:white;text-shadow:none}'
 
         + '</style>'
     ].concat(
+        month_backgrounds,
         header,
         [
             '<line x1="50" x2="50" y1="0" y2="' + bottom + '" class="notch" />' +
@@ -120,6 +147,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
             '<line x1="595" x2="595" y1="0" y2="' + bottom + '" class="notch" />'
         ],
         body,
+        month_labels,
         [
             '<text class="heading" x="50" y="'     + TEXT_OFFSET + '">' + headings[0] + '</text>' +
             '<text class="heading" x="183.75" y="' + TEXT_OFFSET + '" text-anchor="middle">' + headings[1] + '</text>' +
