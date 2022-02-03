@@ -139,12 +139,12 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         month_backgrounds,
         header,
         [
-            '<line x1="50" x2="50" y1="0" y2="' + bottom + '" class="notch" />' +
-            '<line x1="183.75" x2="183.75" y1="0" y2="' + bottom + '" class="notch" />' +
-            '<line x1="322.5" x2="322.5" y1="0" y2="' + bottom + '" class="notch" />' +
-            '<line x1="461.25" x2="461.25" y1="0" y2="' + bottom + '" class="notch" />' +
-            '<line x1="50" x2="50" y1="0" y2="' + bottom + '" class="notch" />' +
-            '<line x1="595" x2="595" y1="0" y2="' + bottom + '" class="notch" />'
+            '<line class="notch" x1="50" x2="50" y1="0" y2="'         + bottom + '" />' +
+            '<line class="notch" x1="183.75" x2="183.75" y1="0" y2="' + bottom + '" />' +
+            '<line class="notch" x1="322.5" x2="322.5" y1="0" y2="'   + bottom + '" />' +
+            '<line class="notch" x1="461.25" x2="461.25" y1="0" y2="' + bottom + '" />' +
+            '<line class="notch" x1="50" x2="50" y1="0" y2="'         + bottom + '" />' +
+            '<line class="notch" x1="595" x2="595" y1="0" y2="'       + bottom + '" />'
         ],
         body,
         month_labels,
