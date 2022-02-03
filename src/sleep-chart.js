@@ -70,7 +70,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
             if ( prev_month != date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth() ) {
                 add_month(y,n);
                 prev_month = date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth();
-                prev_month_string = new Intl.DateTimeFormat(undefined, { "month": "long" } ).format(date_obj);
+                prev_month_string = new Intl.DateTimeFormat(undefined, { "year": "numeric", "month": "long" } ).format(date_obj);
                 prev_month_boundary = y;
             }
 
