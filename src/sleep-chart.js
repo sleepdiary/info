@@ -70,19 +70,18 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
 
         if ( day ) {
 
-            const date = day["id"].split("T")[0],
-                  date_obj = new Date(date + "T00:00:00.000Z")
-            ;
+            const date = day["id"].split(/[T-]/),
+                  date_obj = new Date(date[0],date[1]-1,date[2]);
 
-            if ( prev_month != date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth() ) {
+            if ( prev_month != date_obj.getFullYear()*12 + date_obj.getMonth() ) {
                 add_month(y,n);
-                prev_month = date_obj.getUTCFullYear()*12 + date_obj.getUTCMonth();
+                prev_month = date_obj.getFullYear()*12 + date_obj.getMonth();
                 prev_month_string = new Intl.DateTimeFormat(undefined, { "year": "numeric", "month": "long" } ).format(date_obj);
                 prev_month_boundary = y;
             }
 
             header.push(
-                '<text class="date day-'+date_obj.getUTCDay()
+                '<text class="date day-'+date_obj.getDay()
                     + '" text-anchor="end" x="44" y="'+(y+TEXT_OFFSET)+'">'
                     + new Intl.DateTimeFormat(undefined, { "weekday": "short", "day": "numeric" } ).format(date_obj)
                     + '<title>' + new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(date_obj) + '</title>'
