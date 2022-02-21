@@ -89,7 +89,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
                     + day.activities
                     .filter( a => a.record.status == "asleep" )
                     .map(
-                        a => '<rect class="chart-sleep" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(45+555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '"/>'
+                        a => '<rect class="chart-sleep" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '"/>'
                     ).join('')
             );
 
@@ -98,7 +98,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
                     .filter( a => a.record.status == "asleep" )
                     .map(
                         a =>
-                        '<rect class="chart-sleep chart-sleep-overlay" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(45+555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '">'
+                        '<rect class="chart-sleep chart-sleep-overlay" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '">'
                             + '<title>' + new Intl.DateTimeFormat(undefined, { timeStyle: 'long' }).format(new Date(a.record.start)) + ' - ' + new Intl.DateTimeFormat(undefined, { timeStyle: 'long' }).format(new Date(a.record.end)) + '</title>'
                         + '</rect>'
                     ).join('')
