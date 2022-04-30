@@ -5,7 +5,7 @@ CLOSURE_OPTIONS= \
 		--export_local_property_definitions \
 		--isolation_mode=IIFE \
 		--compilation_level SIMPLE_OPTIMIZATIONS \
-		--language_in ECMASCRIPT_NEXT_IN \
+		--language_in ECMASCRIPT_NEXT \
 		--language_out ECMASCRIPT5 \
 
 docs/sleepdiary-info.min.js: src/header.js src/constants.js $(FILES) src/footer.js
