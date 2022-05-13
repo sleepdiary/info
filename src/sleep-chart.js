@@ -71,7 +71,11 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         if ( day ) {
 
             const date = day["id"].split(/[T-]/),
-                  date_obj = new Date(date[0],date[1]-1,date[2]);
+                  date_obj = new Date(date[0],date[1]-1,date[2]),
+                  sleeps = day.activities.filter(
+                      a => a.record.status == "asleep" && a.record.start && a.record.end
+                  )
+                  ;
 
             if ( prev_month != date_obj.getFullYear()*12 + date_obj.getMonth() ) {
                 add_month(y,n);
@@ -86,16 +90,13 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
                     + new Intl.DateTimeFormat(undefined, { "weekday": "short", "day": "numeric" } ).format(date_obj)
                     + '<title>' + new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(date_obj) + '</title>'
                     + '</text>'
-                    + day.activities
-                    .filter( a => a.record.status == "asleep" )
-                    .map(
+                    + sleeps.map(
                         a => '<rect class="chart-sleep" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '"/>'
                     ).join('')
             );
 
             body.push(
-                day.activities
-                    .filter( a => a.record.status == "asleep" )
+                sleeps
                     .map(
                         a =>
                         '<rect class="chart-sleep chart-sleep-overlay" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '">'
