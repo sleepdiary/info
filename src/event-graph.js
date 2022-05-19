@@ -90,6 +90,45 @@ add_export("event_graph",function( statistics, theme, lines ) {
               day_lengths[ Math.floor( day_lengths.length * 0.95 ) ]
               / (2*ONE_HOUR)
           ),
+          duration_str = d => {
+              const hours = Math.floor(d/(60*60*1000));
+              d %= (60*60*1000);
+              const minutes = Math.floor(d/(60*1000));
+              d %= (60*1000);
+              const seconds = Math.floor(d/1000);
+              let ret = [];
+              switch ( hours ) {
+              case 0:
+                  break;
+              case 1:
+                  ret.push( '1 hour' );
+                  break;
+              default:
+                  ret.push( hours + ' hours' );
+              }
+              switch ( minutes ) {
+              case 0:
+                  break;
+              case 1:
+                  ret.push( '1 minute' );
+                  break;
+              default:
+                  ret.push( minutes + ' minutes' );
+              }
+              if ( !hours ) {
+                  switch ( seconds ) {
+                  case 0:
+                      break;
+                  case 1:
+                      ret.push( '1 second' );
+                      break;
+                  default:
+                      ret.push( seconds + ' seconds' );
+                  }
+              }
+              return ret.join( ' and ' );
+          },
+          time_formatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'long', timeStyle: 'long' }),
           max_point = graph_notch_max * 2*ONE_HOUR,
           graph_range = graph_notch_max*LINE_HEIGHT,
           graph_top = LH2,
@@ -97,6 +136,22 @@ add_export("event_graph",function( statistics, theme, lines ) {
           graph_left = 30,
           graph_width = 555
     ;
+
+    Object.keys(available_series).forEach( key => {
+        switch ( key ) {
+        case 'wake':
+            available_series[key].titles = available_series[key].timestamps.map( t => 'Woke up ' + time_formatter.format(t) );
+            break;
+        case 'sleep':
+            available_series[key].titles = available_series[key].timestamps.map( t => 'Fell asleep ' + time_formatter.format(t) );
+            break;
+        case 'asleep':
+            available_series[key].titles = available_series[key].durations.map( t => 'Slept for ' + duration_str(t) );
+            break;
+        default: // day-length
+            available_series[key].titles = available_series[key].durations.map( t => 'Day lasted ' + duration_str(t) );
+        }
+    });
 
     let ret = (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + ((graph_notch_max+5)*LINE_HEIGHT) + '" class="event-graph ' + (theme||'') + '">'
@@ -240,7 +295,9 @@ add_export("event_graph",function( statistics, theme, lines ) {
                   + 'd="'
                   + 'M ' + ( column_pos(s.timestamps[n]) + icon[2]) + ',' + (graph_bottom - graph_range * d/max_point + icon[3])
                   + icon[4]
-                  + ' z" />'
+                  + ' z">'
+                  + '<title>' + s.titles[n] + '</title>'
+                  + '</path>'
                 )
                 : ''
             ).join('')
