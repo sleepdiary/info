@@ -55,7 +55,11 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
     }
 
     if ( start_at_midnight ) {
-        headings.push(headings.shift());
+        const title_0 = headings[0][0];
+        for ( let n=1; n!=headings.length; ++n ) {
+            headings[n-1][0] = headings[n][0];
+        }
+        headings[headings.length-1][0] = title_0;
     }
     headings.push([ headings[0][0], 595, ' text-anchor="end"' ]);
 
