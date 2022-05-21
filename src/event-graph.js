@@ -178,7 +178,7 @@ add_export("event_graph",function( statistics, theme, lines ) {
 
       // animation:
       + '@keyframes highlighted{to{stroke-dashoffset:-8px}}'
-      + '.highlighted{stroke-dasharray:4;animation:0.75s infinite linear highlighted}'
+      + '.highlighted{stroke-dasharray:4;animation:0.75s infinite linear highlighted;font-weight:bold}'
 
       // dark theme:
       + '.event-graph.dark{background:#3F3F3F}'
@@ -261,6 +261,7 @@ add_export("event_graph",function( statistics, theme, lines ) {
             return (
               // legend:
                 '<g '
+                    + ' class="' + icon[0] + '-legend" '
                     + 'onmouseover="'
                     +   '{var elements=document.getElementsByClassName(\''+icon[0]+'-avg\');'
                     +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal+=\' highlighted\'}'
@@ -311,7 +312,16 @@ add_export("event_graph",function( statistics, theme, lines ) {
                 prev_column = current_column
             ;
             return (
-                '<path class="line ' + icons[n][0] + '-avg" d="M '
+                '<path class="line ' + icons[n][0] + '-avg" '
+                + 'onmouseover="'
+                +   '{var elements=document.getElementsByClassName(\''+icons[n][0]+'-legend\');'
+                +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal+=\' highlighted\'}'
+                + '" '
+                + 'onmouseout="'
+                +   '{var elements=document.getElementsByClassName(\''+icons[n][0]+'-legend\');'
+                +   'for(var n=0;n!=elements.length;++n)elements[n].className.baseVal=elements[n].className.baseVal.replace(/ highlighted/,\'\')}'
+                + '" '
+                + 'd="M '
                 + s.rolling_average.map( (average,n) => {
                     if ( average === undefined ) return '';
                     const x = column_pos(s.timestamps[n]);
