@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
+add_export("sleep_chart",function( activities, theme, start_at_midnight, timezone ) {
 
     const bottom = (activities.length-1) * LINE_HEIGHT + TEXT_OFFSET;
 
@@ -41,7 +41,13 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
         month_labels = [],
         prev_month_boundary = 0,
         prev_month_string = '',
-        prev_month = -1
+        prev_month = -1,
+        // this formatter uses real times:
+        time_formatter       = new Intl.DateTimeFormat(undefined, { timeZone: timezone, timeStyle: 'long', }),
+        // these formatters use timezoneless inputs:
+        date_formatter_short = new Intl.DateTimeFormat(undefined, { timeZone: "Etc/GMT", weekday: "short", day: "numeric", } ),
+        date_formatter_long  = new Intl.DateTimeFormat(undefined, { timeZone: "Etc/GMT", year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', }),
+        month_formatter      = new Intl.DateTimeFormat(undefined, { timeZone: "Etc/GMT", year: "numeric", month: 'long', } )
     ;
 
     function add_month(y,n) {
@@ -84,15 +90,15 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
             if ( prev_month != date_obj.getFullYear()*12 + date_obj.getMonth() ) {
                 add_month(y,n);
                 prev_month = date_obj.getFullYear()*12 + date_obj.getMonth();
-                prev_month_string = new Intl.DateTimeFormat(undefined, { "year": "numeric", "month": "long" } ).format(date_obj);
+                prev_month_string = month_formatter.format(date_obj);
                 prev_month_boundary = y;
             }
 
             header.push(
                 '<text class="date day-'+date_obj.getDay()
                     + '" text-anchor="end" x="44" y="'+(y+TEXT_OFFSET)+'">'
-                    + new Intl.DateTimeFormat(undefined, { "weekday": "short", "day": "numeric" } ).format(date_obj)
-                    + '<title>' + new Intl.DateTimeFormat(undefined, { dateStyle: 'full' }).format(date_obj) + '</title>'
+                    + date_formatter_short.format(date_obj)
+                    + '<title>' + date_formatter_long.format(date_obj) + '</title>'
                     + '</text>'
                     + sleeps.map(
                         a => '<rect class="chart-sleep" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '"/>'
@@ -104,7 +110,7 @@ add_export("sleep_chart",function( activities, theme, start_at_midnight ) {
                     .map(
                         a =>
                         '<rect class="chart-sleep chart-sleep-overlay" x="' + (45+555*a.offset_start) + '" y="' + (y+3) + '" width="' +(555*(a.offset_end-a.offset_start)) + '" height="' + (LINE_HEIGHT-6) + '">'
-                            + '<title>' + new Intl.DateTimeFormat(undefined, { timeStyle: 'long' }).format(new Date(a.record.start)) + ' - ' + new Intl.DateTimeFormat(undefined, { timeStyle: 'long' }).format(new Date(a.record.end)) + '</title>'
+                            + '<title>' + time_formatter.format(new Date(a.record.start)) + ' - ' + time_formatter.format(new Date(a.record.end)) + '</title>'
                         + '</rect>'
                     ).join('')
             );
