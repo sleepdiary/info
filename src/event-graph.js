@@ -128,7 +128,15 @@ add_export("event_graph",function( statistics, theme, lines ) {
               }
               return ret.join( ' and ' );
           },
-          time_formatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'long', timeStyle: 'long' }),
+          time_formatter = new Intl.DateTimeFormat(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              weekday: 'long',
+              hour: 'numeric',
+              minute: 'numeric',
+              timeZone: "Etc/GMT",
+          }),
           max_point = graph_notch_max * 2*ONE_HOUR,
           graph_range = graph_notch_max*LINE_HEIGHT,
           graph_top = LH2,
