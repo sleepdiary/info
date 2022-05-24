@@ -165,7 +165,7 @@ add_export("event_graph",function( statistics, theme, lines ) {
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ' + ((graph_notch_max+5)*LINE_HEIGHT) + '" class="event-graph ' + (theme||'') + '">'
       + '<style>'
 
-      + 'svg.event-graph{width:100%;height:auto;background:white}'
+      + 'svg.event-graph{max-width:100%;max-height:100%;background:white}'
       + '.event-graph text{font-family:sans-serif;font-size:' + (LINE_HEIGHT-4) + 'px;fill:black}'
       + '.event-graph .axes{fill:none;stroke:black}'
       + '.event-graph .notch{stroke-dasharray:4;stroke:black}'
